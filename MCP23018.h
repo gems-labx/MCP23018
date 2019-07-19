@@ -9,6 +9,8 @@
 #define A 0
 #define B 1
 
+#define OPEN_DRAIN 3  //4th potential state of operation for IO expander pins
+
 #define BASE_ADR 0x20 //Base address for device, to be or-ed with configurable address
 
 #define DIRA 0x00

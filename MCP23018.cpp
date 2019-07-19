@@ -11,6 +11,10 @@ MCP23018::MCP23018(int _ADR)
 
 int MCP23018::begin(void)  //FIX! Combine interrupt lines be default!
 {
+
+  PinModeConf[0] = 0xFF; //Default to all inputs //FIX make cleaner
+  PinModeConf[1] = 0xFF; 
+
   Wire.beginTransmission(ADR); //Test if device present 
   if(Wire.endTransmission() != 0) return -1;
   else return 1;
@@ -26,8 +30,8 @@ int MCP23018::PinMode(int Pin, uint8_t PinType, bool Port)
 
   if(PinType == INPUT)
   {
-    PinModeConf[Port] = PinModeConf[Port] | (0x01 << Pin);
-    PullUpConf[Port] = PullUpConf[Port] & ~(0x01 << Pin);  //Clear pullup bit
+    PinModeConf[Port] = PinModeConf[Port] | (0x01 << Pin); //Set bit for input
+    PullUpConf[Port] = PullUpConf[Port] & ~(0x01 << Pin);  //Clear bit for pullup 
     // Serial.print("Reg 0x03 = ");  //DEBUG!
     // Serial.println(PinModeConf, HEX); //DEBUG!
     SetDirection(PinModeConf[Port], Port);
@@ -36,18 +40,34 @@ int MCP23018::PinMode(int Pin, uint8_t PinType, bool Port)
   }
   else if(PinType == OUTPUT)
   {
-    PinModeConf[Port] = PinModeConf[Port] & ~(0x01 << Pin);
-    Serial.print("Reg 0x03 = ");  //DEBUG!
-    Serial.println(PinModeConf[Port], HEX); //DEBUG!
+    PinModeConf[Port] = PinModeConf[Port] & ~(0x01 << Pin); //Clear bit for output
+    PullUpConf[Port] = PullUpConf[Port] | (0x01 << Pin);  //Set pullup bit to allow for "push-pull" operation
+    // Serial.print("Reg 0x03 = ");  //DEBUG!
+    // Serial.println(PinModeConf[Port], HEX); //DEBUG!
+    // Serial.println(PullUpConf[Port], HEX); //DEBUG!
     SetDirection(PinModeConf[Port], Port);
+    SetPullup(PullUpConf[Port], Port);
+    return 0;
+  }
+
+  else if(PinType == OPEN_DRAIN)
+  {
+    PinModeConf[Port] = PinModeConf[Port] & ~(0x01 << Pin); //Clear bit for output
+    PullUpConf[Port] = PullUpConf[Port] & ~(0x01 << Pin);  //Clear pullup bit to allow for open drain operation
+    // Serial.print("Reg 0x03 = ");  //DEBUG!
+    // Serial.println(PinModeConf[Port], HEX); //DEBUG!
+    SetDirection(PinModeConf[Port], Port);
+    SetPullup(PullUpConf[Port], Port);
     return 0;
   }
 
   else if(PinType == INPUT_PULLUP)
   {
-    PullUpConf[Port] = PullUpConf[Port] | (0x01 << Pin);
+    PinModeConf[Port] = PinModeConf[Port] | (0x01 << Pin); //Set bit for input
+    PullUpConf[Port] = PullUpConf[Port] | (0x01 << Pin);  //Set bit for pullup  
     // Serial.print("Reg 0x03 = ");  //DEBUG!
     // Serial.println(PinModeConf, HEX); //DEBUG!
+    SetDirection(PinModeConf[Port], Port); 
     SetPullup(PullUpConf[Port], Port);
     return 0;
   }
@@ -114,20 +134,20 @@ int MCP23018::SetPort(int Config, bool Port)
   Wire.beginTransmission(ADR); // transmit to device with address ADR
   Wire.write(LATA + Port);   //Send to output set register
   Wire.write(Config);   
-  Serial.println(LATA + Port, HEX); //DEBUG!
-  Serial.println(Config, HEX); //DEBUG!
-  Serial.print("\n\n"); //DEBUG!
+  // Serial.println(LATA + Port, HEX); //DEBUG!
+  // Serial.println(Config, HEX); //DEBUG!
+  // Serial.print("\n\n"); //DEBUG!
   return Wire.endTransmission();
 }
 
 int MCP23018::SetDirection(int Config, bool Port) 
 {
+  // Serial.println(Config, HEX); //DEBUG!
   Wire.beginTransmission(ADR); // transmit to device with address ADR
   Wire.write(DIRA + Port);        //Send to port configuration register
   Wire.write(Config);              
-  Serial.println(DIRA + Port, HEX); //DEBUG!
-  Serial.println(Config, HEX); //DEBUG!
-  Serial.print("\n\n"); //DEBUG!
+  // Serial.println(DIRA + Port, HEX); //DEBUG!
+  // Serial.print("\n\n"); //DEBUG!
   return Wire.endTransmission();    // stop transmitting
 }
 
@@ -141,6 +161,7 @@ int MCP23018::SetPolarity(int Config, bool Port)
 
 int MCP23018::SetPullup(int Config, bool Port) 
 {
+  // Serial.println(Config, HEX); //DEBUG!
   Wire.beginTransmission(ADR); // transmit to device with address ADR
   Wire.write(PULLUPA + Port);        //Send to port configuration register
   Wire.write(Config);         
