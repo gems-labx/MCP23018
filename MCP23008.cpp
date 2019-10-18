@@ -1,3 +1,19 @@
+/******************************************************************************
+MCP23008.cpp
+Interface for MCP23008 8 bit IO expander
+Bobby Schulz @ Northern Widget LLC
+10/18/2019
+https://github.com/NorthernWidget-Skunkworks/MCP23018
+
+Allows control of all aspects of the control of the IO expander 
+
+0.0.0
+
+"All existing things are really one"
+-Zhuangzi
+
+Distributed as-is; no warranty is given.
+******************************************************************************/
 #include <Arduino.h>
 #include <MCP23008.h>
 #include <Wire.h>

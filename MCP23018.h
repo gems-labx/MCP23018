@@ -1,3 +1,20 @@
+/******************************************************************************
+MCP23018.h
+Interface for MCP23018 16 bit IO expander
+Bobby Schulz @ Northern Widget LLC
+07/18/2019
+https://github.com/NorthernWidget-Skunkworks/MCP23018
+
+Allows control of all aspects of the control of the IO expander 
+
+0.0.0
+
+"All existing things are really one"
+-Zhuangzi
+
+Distributed as-is; no warranty is given.
+******************************************************************************/
+
 #ifndef MCP23018_h
 #define MCP23018_h
 
