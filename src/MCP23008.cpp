@@ -119,6 +119,24 @@ int MCP23008::DigitalWrite(int Pin, bool State)
     return -1; //Fail if state is ill-defined
 }
 
+int MCP23008::DigitalRead(int Pin)
+{
+  if(Pin > 8 || Pin < 0)
+  {
+    return -1; //Fail if pin out of range
+  }
+
+  Wire.beginTransmission(ADR);
+  Wire.write(PORT);
+  int Error = Wire.endTransmission();
+
+  Wire.requestFrom(ADR, 1); //Get single byte back
+  uint8_t Val = Wire.read(); //Read pack port status 
+  
+  if(Error == 0) return (Val >> Pin) & 0x01; //If no error, return desired pin state
+  return -1; //Indicate I2C bus error 
+}
+
 int MCP23008::SetInterrupt(int Pin, bool State)
 {
   if(Pin > 8 || Pin < 0)

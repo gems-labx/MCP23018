@@ -54,11 +54,12 @@ class MCP23008
     int begin(void);
     int PinMode(int Pin, uint8_t State);
     int DigitalWrite(int Pin, bool State);
+    int DigitalRead(int Pin);
     int SetInterrupt(int Pin, bool State);
 
   private:
     const int ADR = BASE_ADR; //FIX! Replace with equation later
-  	uint8_t PinModeConf = 0xFF; //All pins natively inputs
+    uint8_t PinModeConf = 0xFF; //All pins natively inputs
     uint8_t PortState = 0; //All pins natively off
     // uint8_t PortAState = 0x00; //All pins natively off
     // uint8_t PortBState = 0x00; //All pins natively off
