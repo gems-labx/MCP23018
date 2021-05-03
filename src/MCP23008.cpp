@@ -14,14 +14,16 @@ Allows control of all aspects of the control of the IO expander
 
 Distributed as-is; no warranty is given.
 ******************************************************************************/
-#include <Arduino.h>
+// #include <Arduino.h>
+#include <Particle.h>
 #include <MCP23008.h>
 #include <Wire.h>
 
 MCP23008::MCP23008(int _ADR)
 {
   // ADR = _ADR; //FIX ADR!
-  Wire.begin();  
+  // Wire.begin();  
+  if(!Wire.isEnabled()) Wire.begin(); //Begin only is not already started 
 }
 
 
