@@ -7,7 +7,7 @@ https://github.com/NorthernWidget-Skunkworks/MCP23018
 
 Allows control of all aspects of the control of the IO expander 
 
-0.0.0
+1.0.0
 
 "All existing things are really one"
 -Zhuangzi
@@ -18,7 +18,8 @@ Distributed as-is; no warranty is given.
 #ifndef MCP23018_h
 #define MCP23018_h
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <Wire.h>
 
 #define ON 1
 #define OFF 0
@@ -38,8 +39,8 @@ Distributed as-is; no warranty is given.
 #define INTENB 0x05
 #define PULLUPA 0x0C
 #define PULLUPB 0x0D
-#define PORTA 0x12
-#define PORTB 0x13
+// #define PORTA 0x12
+// #define PORTB 0x13
 #define LATA 0x14
 #define LATB 0x15
 
@@ -62,15 +63,18 @@ class MCP23018
     // };
 
   public:
-    MCP23018(int _ADR);
+    MCP23018(int _ADR = BASE_ADR); //Default to base address if none specified 
     int begin(void);
-    int PinMode(int Pin, uint8_t State, bool Port);
-    int DigitalWrite(int Pin, bool State, bool Port);
-    int SetInterrupt(int Pin, bool State, bool Port);
+    int pinMode(int Pin, uint8_t State, bool Port);
+    int pinMode(int Pin, uint8_t State);
+    int digitalWrite(int Pin, bool State, bool Port);
+    int digitalWrite(int Pin, bool State);
+    int setInterrupt(int Pin, bool State, bool Port);
+    int setInterrupt(int Pin, bool State);
 
   private:
-    const int ADR = BASE_ADR; //FIX! Replace with equation later
-  	uint8_t PinModeConf[2] = {0xFF}; //All pins natively inputs
+    int ADR = BASE_ADR; //FIX! Replace with equation later
+  	uint8_t pinModeConf[2] = {0xFF}; //All pins natively inputs
     uint8_t PortState[2] = {0}; //All pins natively off
     // uint8_t PortAState = 0x00; //All pins natively off
     // uint8_t PortBState = 0x00; //All pins natively off
@@ -78,12 +82,12 @@ class MCP23018
     uint8_t PullUpConf[2] = {0x00}; //Natively disabled
     uint8_t InterruptConf[2] = {0x00}; //Interrupts dissabled by default
 
-    int SetPort(int Config, bool Port);
-    int SetDirection(int Config, bool Port);
-    int SetPolarity(int Config, bool Port);
-    int SetPullup(int Config, bool Port);
-    int SetInt(int Config, bool Port);
-    int ReadPort(int Config, bool Port); //IN DEVELOPMENT
+    int setPort(int Config, bool Port);
+    int setDirection(int Config, bool Port);
+    int setPolarity(int Config, bool Port);
+    int setPullup(int Config, bool Port);
+    int setInt(int Config, bool Port);
+    int readPort(int Config, bool Port); //IN DEVELOPMENT
 };
 
 #endif
