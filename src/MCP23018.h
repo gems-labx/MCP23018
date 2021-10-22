@@ -26,6 +26,7 @@ Distributed as-is; no warranty is given.
 
 #define A 0
 #define B 1
+#define BOTH 2
 
 #define OPEN_DRAIN 3  //4th potential state of operation for IO expander pins
 
@@ -39,8 +40,8 @@ Distributed as-is; no warranty is given.
 #define INTENB 0x05
 #define PULLUPA 0x0C
 #define PULLUPB 0x0D
-// #define PORTA 0x12
-// #define PORTB 0x13
+#define PORTA 0x12
+#define PORTB 0x13
 #define LATA 0x14
 #define LATB 0x15
 
@@ -69,25 +70,39 @@ class MCP23018
     int pinMode(int Pin, uint8_t State);
     int digitalWrite(int Pin, bool State, bool Port);
     int digitalWrite(int Pin, bool State);
+    int digitalRead(int Pin, bool Port);
+    int digitalRead(int Pin);
     int setInterrupt(int Pin, bool State, bool Port);
     int setInterrupt(int Pin, bool State);
+    int getInterrupt(int Pin);
+    unsigned int clearInterrupt(int Port);
+    int setInputPolarity(int Pin, bool State, bool Port);
+    int setInputPolarity(int Pin, bool State);
+    int setIntPinConfig(int Pin, bool OnChange, bool DefVal = 0);
+    int setIntConfig(bool Mirror, bool OpenDrain = 0, bool Polarity = 0, bool Clearing = 0);
+    unsigned int readBus(); 
+
 
   private:
     int ADR = BASE_ADR; //FIX! Replace with equation later
-  	uint8_t pinModeConf[2] = {0xFF}; //All pins natively inputs
-    uint8_t PortState[2] = {0}; //All pins natively off
-    // uint8_t PortAState = 0x00; //All pins natively off
-    // uint8_t PortBState = 0x00; //All pins natively off
-    uint8_t PinPolarityConfig[2] = {0x00}; //All pins natively non-inverted
-    uint8_t PullUpConf[2] = {0x00}; //Natively disabled
-    uint8_t InterruptConf[2] = {0x00}; //Interrupts dissabled by default
+  	uint8_t PinModeConf[2] = {0xFF, 0xFF}; //All pins natively inputs (IODIRx)
+    uint8_t PortState[2] = {0}; //All pins natively off (GPIOx)
+    uint8_t PinPolarityConfig[2] = {0x00}; //All pins natively non-inverted (IPOLx)
+    uint8_t PullUpConf[2] = {0x00}; //Natively disabled (GPPUx)
+    uint8_t InterruptConf[2] = {0x00}; //Interrupts dissabled by default (GPINTENx)
+    uint8_t DefaultValConf[2] = {0x00}; //Default interrupt value (DEFVALx)
+    uint8_t InterruptTypeConf[2] = {0x00}; //Interrupt type values (INTCONx)
 
     int setPort(int Config, bool Port);
     int setDirection(int Config, bool Port);
     int setPolarity(int Config, bool Port);
     int setPullup(int Config, bool Port);
     int setInt(int Config, bool Port);
-    int readPort(int Config, bool Port); //IN DEVELOPMENT
+    int readPort(bool Port); 
+    int readByte(int Pos);
+    int writeByte(int Pos, uint8_t Val);
+    uint8_t clearBit(uint8_t Val, uint8_t Pos);
+    
 };
 
 #endif
