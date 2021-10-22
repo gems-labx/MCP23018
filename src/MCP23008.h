@@ -18,8 +18,9 @@ Distributed as-is; no warranty is given.
 #ifndef MCP23008_h
 #define MCP23008_h
 
-// #include "Arduino.h"
-#include <Particle.h>
+#include "Arduino.h"
+#include <Wire.h>
+// #include <Particle.h>
 
 #define ON 1
 #define OFF 0

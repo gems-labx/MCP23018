@@ -15,15 +15,19 @@ Allows control of all aspects of the control of the IO expander
 Distributed as-is; no warranty is given.
 ******************************************************************************/
 // #include <Arduino.h>
-#include <Particle.h>
+// #include <Particle.h>
 #include <MCP23008.h>
-#include <Wire.h>
+// #include <Wire.h>
 
 MCP23008::MCP23008(int _ADR)
 {
   // ADR = _ADR; //FIX ADR!
   // Wire.begin();  
-  if(!Wire.isEnabled()) Wire.begin(); //Begin only is not already started 
+  #if defined(ARDUINO) && ARDUINO >= 100 
+    Wire.begin();
+  #elif defined(PARTICLE)
+    if(!Wire.isEnabled()) Wire.begin(); //Only initialize I2C if not done already //INCLUDE FOR USE WITH PARTICLE 
+  #endif
 }
 
 
