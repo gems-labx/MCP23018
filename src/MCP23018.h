@@ -86,7 +86,7 @@ class MCP23018
   private:
     int ADR = BASE_ADR; //FIX! Replace with equation later
   	uint8_t PinModeConf[2] = {0xFF, 0xFF}; //All pins natively inputs (IODIRx)
-    uint8_t PortState[2] = {0}; //All pins natively off (GPIOx)
+    uint8_t PortState[2] = {0}; //All pins natively off (LATx)
     uint8_t PinPolarityConfig[2] = {0x00}; //All pins natively non-inverted (IPOLx)
     uint8_t PullUpConf[2] = {0x00}; //Natively disabled (GPPUx)
     uint8_t InterruptConf[2] = {0x00}; //Interrupts dissabled by default (GPINTENx)

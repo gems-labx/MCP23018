@@ -32,6 +32,7 @@ int MCP23018::begin(void)  //FIX! Combine interrupt lines be default!
   #elif defined(PARTICLE)
     if(!Wire.isEnabled()) Wire.begin(); //Only initialize I2C if not done already //INCLUDE FOR USE WITH PARTICLE 
   #endif
+  // Wire.setClock(400000); //DEBUG!
   // PinModeConf[0] = 0xFF; //Default to all inputs //FIX make cleaner
   // PinModeConf[1] = 0xFF; 
 
@@ -378,8 +379,8 @@ unsigned int MCP23018::readBus()
   Wire.endTransmission();    // stop transmitting
 
   Wire.requestFrom(ADR, 2);
-  unsigned int HighByte = Wire.read();
   unsigned int LowByte = Wire.read();
+  unsigned int HighByte = Wire.read();
 
   return (HighByte << 8) | LowByte;
 }
