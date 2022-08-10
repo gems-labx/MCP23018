@@ -81,7 +81,7 @@ int MCP23018::pinMode(int Pin, uint8_t PinType, bool Port)
     return 0;
   }
 
-  else if(PinType == OPEN_DRAIN)
+  else if(PinType == OUTPUT_OPEN_DRAIN)
   {
     PinModeConf[Port] = PinModeConf[Port] & ~(0x01 << Pin); //Clear bit for output
     PullUpConf[Port] = PullUpConf[Port] & ~(0x01 << Pin);  //Clear pullup bit to allow for open drain operation

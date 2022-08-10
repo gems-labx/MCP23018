@@ -21,39 +21,21 @@ Distributed as-is; no warranty is given.
 #include <Arduino.h>
 #include <Wire.h>
 
+#if  !defined(OUTPUT_OPEN_DRAIN)
+#define OUTPUT_OPEN_DRAIN 5
+#endif
 #define ON 1
 #define OFF 0
 
-#define A 0
-#define B 1
-#define BOTH 2
+// #define A 0
+// #define B 1
+// #define BOTH 2
 
-#define OPEN_DRAIN 3  //4th potential state of operation for IO expander pins
 
-#define BASE_ADR 0x20 //Base address for device, to be or-ed with configurable address
 
-#define DIRA 0x00
-#define DIRB 0x01
-#define POLA 0x02 
-#define POLB 0x03
-#define INTENA 0x04
-#define INTENB 0x05
-#define PULLUPA 0x0C
-#define PULLUPB 0x0D
-#define PORTA 0x12
-#define PORTB 0x13
-#define LATA 0x14
-#define LATB 0x15
+// #define OPEN_DRAIN 3  //4th potential state of operation for IO expander pins
+#define MCP23018_BASE_ADR 0x20 //Base address for device, to be or-ed with configurable address
 
-#define DEFVALA 0x06
-#define DEFVALB 0x07
-#define IOCON 0x0A //Also 0x0B
-#define FLAGA 0x0E
-#define FLAGB 0x0F
-#define INTCAPA 0x10
-#define INTCAPB 0x11
-#define INTCONA 0x08
-#define INTCONB 0x09
 
 class MCP23018
 {
@@ -63,8 +45,9 @@ class MCP23018
     //     OUTPUT
     // };
 
+
   public:
-    MCP23018(int _ADR = BASE_ADR); //Default to base address if none specified 
+    MCP23018(int _ADR = MCP23018_BASE_ADR); //Default to base address if none specified 
     int begin(void);
     int pinMode(int Pin, uint8_t State, bool Port);
     int pinMode(int Pin, uint8_t State);
@@ -81,10 +64,45 @@ class MCP23018
     int setIntPinConfig(int Pin, bool OnChange, bool DefVal = 0);
     int setIntConfig(bool Mirror, bool OpenDrain = 0, bool Polarity = 0, bool Clearing = 0);
     unsigned int readBus(); 
-
+    enum Ports: int
+    // namespace Ports
+    {
+        // constexpr uint8_t CURRENT = 0;
+        // constexpr uint8_t STALE = 1;
+        // constexpr uint8_t BOTH = 2;
+        A = 0,
+        B = 1,
+        BOTH = 2,
+    };
 
   private:
-    int ADR = BASE_ADR; //FIX! Replace with equation later
+
+    
+
+    const int DIRA = 0x00;
+    const int DIRB = 0x01;
+    const int POLA = 0x02; 
+    const int POLB = 0x03;
+    const int INTENA = 0x04;
+    const int INTENB = 0x05;
+    const int PULLUPA = 0x0C;
+    const int PULLUPB = 0x0D;
+    const int PORTA = 0x12;
+    const int PORTB = 0x13;
+    const int LATA = 0x14;
+    const int LATB = 0x15;
+
+    const int DEFVALA = 0x06;
+    const int DEFVALB = 0x07;
+    const int IOCON = 0x0A; //Also = 0x0B
+    const int FLAGA = 0x0E;
+    const int FLAGB = 0x0F;
+    const int INTCAPA = 0x10;
+    const int INTCAPB = 0x11;
+    const int INTCONA = 0x08;
+    const int INTCONB = 0x09;
+
+    int ADR = MCP23018_BASE_ADR; //FIX! Replace with equation later
   	uint8_t PinModeConf[2] = {0xFF, 0xFF}; //All pins natively inputs (IODIRx)
     uint8_t PortState[2] = {0}; //All pins natively off (LATx)
     uint8_t PinPolarityConfig[2] = {0x00}; //All pins natively non-inverted (IPOLx)
