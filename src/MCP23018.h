@@ -78,7 +78,15 @@ class MCP23018
   private:
 
     
-
+    // enum Regs: const int
+    // // namespace Ports
+    // {
+    //     // constexpr uint8_t CURRENT = 0;
+    //     // constexpr uint8_t STALE = 1;
+    //     // constexpr uint8_t BOTH = 2;
+    //     PORTA = 0x12,
+    //     PORTB = 0x13
+    // };
     const int DIRA = 0x00;
     const int DIRB = 0x01;
     const int POLA = 0x02; 
@@ -87,8 +95,8 @@ class MCP23018
     const int INTENB = 0x05;
     const int PULLUPA = 0x0C;
     const int PULLUPB = 0x0D;
-    const int PORTA = 0x12;
-    const int PORTB = 0x13;
+    const int PORTA_REG = 0x12;
+    const int PORTB_REG = 0x13;
     const int LATA = 0x14;
     const int LATB = 0x15;
 

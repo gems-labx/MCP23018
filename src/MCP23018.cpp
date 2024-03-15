@@ -293,13 +293,13 @@ unsigned int MCP23018::clearInterrupt(int Port)
 {
   switch(Port){ //Read port to clear interrupts and returns pin state 
     case A:
-      return readByte(PORTA);
+      return readByte(PORTA_REG);
       break;
     case B:
-      return readByte(PORTB) << 8;
+      return readByte(PORTB_REG) << 8;
       break;
     case BOTH:
-      return (readByte(PORTB) << 8) | readByte(PORTA);
+      return (readByte(PORTB_REG) << 8) | readByte(PORTA_REG);
       break;
     default:
       return 0;
@@ -322,7 +322,7 @@ int MCP23018::setInputPolarity(int Pin, bool State)
 int MCP23018::readPort(bool Port)
 {
   Wire.beginTransmission(ADR); // transmit to device with address ADR
-  Wire.write(PORTA + Port);        //Address appropriate port register
+  Wire.write(PORTA_REG + Port);        //Address appropriate port register
   Wire.endTransmission();    // stop transmitting
 
   Wire.requestFrom(ADR, 1);
@@ -375,7 +375,7 @@ int MCP23018::setIntConfig(bool Mirror, bool OpenDrain, bool Polarity, bool Clea
 unsigned int MCP23018::readBus()
 {
   Wire.beginTransmission(ADR); // transmit to device with address ADR
-  Wire.write(PORTA);        //Address appropriate port register
+  Wire.write(PORTA_REG);        //Address appropriate port register
   Wire.endTransmission();    // stop transmitting
 
   Wire.requestFrom(ADR, 2);
